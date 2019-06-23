@@ -30,14 +30,16 @@ RUN apt-get install -y \
 
 	# Get and verify Keybase.io's code signing key
 RUN curl $CURLOPTS --silent https://keybase.io/docs/server_security/code_signing_key.asc | \
-		gpg --import \
-	&& gpg --fingerprint 222B85B0F90BE2D24CFEB93F47484E50656D16C7 \
+                gpg --import \
+        && gpg --fingerprint 222B85B0F90BE2D24CFEB93F47484E50656D16C7 \
 
-	# Get, verify and install client package
-	&& curl $CURLOPTS --silent -O https://prerelease.keybase.io/keybase_amd64.deb.sig \
-	&& curl $CURLOPTS -O https://prerelease.keybase.io/keybase_amd64.deb \
-	&& gpg --verify keybase_amd64.deb.sig keybase_amd64.deb \
-	&& dpkg -i keybase_amd64.deb
+        # Get, verify and install client package
+        && curl $CURLOPTS --silent -O https://prerelease.keybase.io/keybase_amd64.deb.sig \
+        && curl $CURLOPTS -O https://prerelease.keybase.io/keybase_amd64.deb \
+        && gpg --verify keybase_amd64.deb.sig keybase_amd64.deb
+
+# Install deb file using apt to bring in dependencies
+RUN apt-get install -y ./keybase_amd64.deb
 
 	# Create group, user
 RUN groupadd -g 1000 keybase \
